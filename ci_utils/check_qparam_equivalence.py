@@ -1,3 +1,4 @@
+import argparse
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--created_quant_param_path", help="path of the quant param file that is just created through calibrate.py")
@@ -47,9 +48,8 @@ def is_qparam_same(created_quant_param_path, released_quant_param_path, print_lo
     return True
 
 if __name__ == "__main__":
-    #args = get_args()
-    is_qparam_same('./qparam.npy', './quant_param.npy')
-    #print(is_qparam_same(args.created_quant_param_path, args.released_quant_param_path))
+    args = get_args()
+    print(is_qparam_same(args.created_quant_param_path, args.released_quant_param_path))
 
 
 

@@ -73,11 +73,6 @@ python ci_utils/check_qparam_equivalence.py --released_quant_param_path=$RELEASE
                                             
 
 
-
-
-
-
-
 unset LOG_PATH
 
 printf "\n============= End of calibration =============\n"
