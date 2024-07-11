@@ -10,7 +10,7 @@ def get_args():
 
 
 
-def is_qparam_same(created_quant_param_path, released_quant_param_path, print_log=True):
+def is_qparam_same(created_quant_param_path, released_quant_param_path, print_log=False):
     import numpy as np
 
 
