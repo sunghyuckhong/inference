@@ -67,9 +67,8 @@ cd $git_dir
 RELEASED_PARAM_PATH=$git_dir/ci_utils/released_qparams/gpt-j/qparam.npy
 printf "\n============= STEP-2: Check the equivalence of quantiation parameters =============\n"
 
-python -m ./ci_utils/check_quantization_equivalence.py --released_quant_param_path=$RELEASED_PARAM_PATH \
+python ci_utils/check_qparam_equivalence.py --released_quant_param_path=$RELEASED_PARAM_PATH \
                                     --created_quant_param_path=$QUANT_PARAM_PATH\
-
 
                                             
 
