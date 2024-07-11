@@ -46,7 +46,7 @@ export LOG_PATH
 mkdir -p $LOG_PATH/calibration_range
 
 if [ "$CALIBRATE" = true ]; then
-    printf "\t\tNUM_CALIB_DATA: $N_CALIB\n"
+    printf "\tNUM_CALIB_DATA: $N_CALIB\n"
     QUANT_PARAM_PATH=$LOG_PATH/calibration_range/quant_param.npy
     QUANT_FORMAT_PATH=$LOG_PATH/calibration_range/quant_format.yaml
     python -m quantization.calibrate --model_path=$MODEL_PATH \
@@ -63,7 +63,6 @@ else
 fi
 
 cd $git_dir
-
 RELEASED_PARAM_PATH=$git_dir/ci_utils/released_qparams/gpt-j/qparam.npy
 printf "\n============= STEP-2: Check the equivalence of quantiation parameters =============\n"
 

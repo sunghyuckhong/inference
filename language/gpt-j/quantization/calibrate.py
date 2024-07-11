@@ -94,47 +94,6 @@ def make_calib_dataloader(calib_dataset_path, batch_size, n_calib):
     
     return DataLoader(data_list, batch_size)
 
-# def cal_data_loader(calib_dataset_path, model, batch_size, n_calib):
-#     GPTJ_MAX_LEN = 1919
-#     postprocess_func=None
-#     total_block_space=None
-#     max_length=None
-
-#     generator_class = "model_compressor.helper.QuantCausalLM"
-#     max_length=2048
-
-#     model_name_for_tokenizer = "EleutherAI/gpt-j-6B"
-
-#     calib_dataloader, _ = (
-#                 calib_generator(
-#                     calib_dataset_path,
-#                     model,
-#                     model_name_for_tokenizer,
-#                     generator_class,
-#                     AutoTokenizer,
-#                     device=model.device,
-#                     postprocess_func=postprocess_func,
-#                     model_max_length=GPTJ_MAX_LEN,
-#                     total_block_space=total_block_space,
-#                     max_length=max_length
-#                 )
-#             )
-
-
-
-#     data_object = Dataset(calib_dataset_path, batch_size)
-#     data_list = [
-#         {
-#             "input_ids": data_object.source_encoded_input_ids[idx],
-#             "attention_mask": data_object.source_encoded_attn_masks[idx],
-#             "position_ids": torch.arange(
-#                 len(data_object.source_encoded_input_ids[idx][0])
-#             ),
-#         }
-#         for idx in range(len(data_object.source_encoded_input_ids))[:n_calib]
-#     ]
-#     return DataLoader(data_list, batch_size)
-
 
 def calibrate(model: GraphModule, qconfig, qparam_path, qformat_path, calib_dataloader):
     run_autoscale = qconfig.get("autoscale", "disabled") != "disabled"
@@ -242,7 +201,6 @@ def get_args():
 def main():
     args = get_args()
     sut = None
-    #temp code for conveninet exp. will be removed
     golden_model = load_pytorch_model(args.model_path, args.gpu)
 
     random_seed()
