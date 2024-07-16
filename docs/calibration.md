@@ -1,46 +1,45 @@
-# MLPerf Inference Calibration and Quantization Details
+# MLPerf Inference Calibration and Quantization
 
 ---
 
 ## FuriosaAI MLPerf Quantization
 
-In the post-training quantization process, a dynamic range search for each weight and activation tensor is required.
-Symmetric quantization is applied to the weights, while asymmetric quantization is applied to the activations.
+The post-training quantization process involves calculating the quantization parameters based on the dynamic ranges of the weight and activation tensors. Symmetric quantization is applied to the weights, while asymmetric quantization is applied to the activations.
 
-### Weights
+### Weight Quantization
 
-
-dynamic range values are determined by searching for the maximum absolute value(*AMAX*), with each weight tensor having its own *per-channel* *AMAX* value. For GPT-J, *SmoothQuant* is applied initially, after which the dynamic range values are defined.
-
-### Activations
+We use *per-channel* quantization for the weights, determining the quantization parameters from the maximum absolute values(*AMAX*) of the channels of each weight tensor. For GPT-J, we calculate the dynamic range values of the weights after applying *SmoothQuant*. 
 
 
-For each activation tensor, it is necessary to search for dynamic range values using a calibration dataset. Activation quantization follows an asymmetric scheme and the dynamic range value is initialized either *per-channel* or *per-tensor*, depending on the model and the architecture of the network. For BERT, dynamic range values are determined using *PERCENTILE* method. This method involves creating histograms based on the elements in the tensor bins, selecting a range that covers 99.99% of the element count in the tensor.
+### Activation Quantization
+The dynamic range values of the activations are obtained through the use of a calibration dataset. Asymmetric quantization is applied to the activation tensors, with its granularity determined as either *per-channel* or *per-tensor* depending on the type of models. The quantization parameters of BERT are determined by the *PERCENTILE* calibration method, which involves creating histograms based on the tensor elements and selecting the dynamic range that covers 99.99% of the elements.
+
 
 ### Additional Details
 
+ - Quantizing all the tensors to low bit precision can lead to latency improvement. However, in order to achieve the favorable tradeoff between latency and accuracy, we quantize the tensors related to linear layers as INT8 and other intermediate tensors as either FP32, BF16, or INT8. 
 
- - From an acceleration perspective, quantizing all tensors to low bit precision would be ideal. However, considering the trade-off with accuracy, tensors related to linear layers are quantized to INT8 but other intermediate tensors are pre-determined to use appropriate representations such as FP32, BF16, or INT8.
+- We employ INT8 KV cache quantization to cope with the memory bottleneck of large language model (LLM) inference.
 
- - Using KV cache quantization to cache values in INT8.
 
-### BERT, GPT-J Qunatization Details
 
-Note: applied selectively based on accuracy impact
+### Quantization Details for BERT & GPT-J 
 
-When quantizing BERT, the following details are applied in each block:
+Note: applied selectively based on accuracy impact.
+
+The following quantization methods are applied to each block of BERT:
 
 - Weight: INT8, per-channel symmetric quantization, *AMAX*
 - Activation: INT8, per-channel asymmetric quantization, *PERCENTILE*
 
 
-When quantizing GPT-J, the following details are applied in each decoder block:
+The following quantization methods are applied to each decoder block of GPT-J:
 
 - Weight: INT8, per-channel symmetric quantization with SmoothQuant, *AMAX*
 - Activation: INT8, per-tensor asymmetric quantization with SmoothQuant, *MINMAX*
-- KV caching: INT8, per-head asymmetric quantization
+- KV cache: INT8, per-head asymmetric quantization
 
 
 ### SmoothQuant
 
-In MLPerf Inference v4.1, $\alpha$ = 0.5.
+In MLPerf Inference v4.1, the migration strength for SmoothQuant is set as $\alpha$ = 0.5.
