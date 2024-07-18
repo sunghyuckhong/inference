@@ -75,7 +75,8 @@ if [ "$CALIBRATE" = true ]; then
                                      --quant_format_path=$QUANT_FORMAT_PATH \
                                      --calib_data_path=$CALIB_DATA_PATH \
                                      --n_calib=$N_CALIB \
-                                     --gpu
+                                     --gpu \
+                                     --save_cache_files
     printf "Save calibration range to $LOG_PATH/calibration_range"
 else
     cp $QUANT_PARAM_PATH $LOG_PATH/calibration_range/quant_param.npy
