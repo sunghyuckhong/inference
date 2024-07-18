@@ -141,13 +141,15 @@ def calibrate(model: GraphModule, model_type, qconfig, qparam_path, qformat_path
         traced_models = model.trace_all()
         quant_models = quantize_model(traced_models, qparam_path, qformat_path,)
 
-        qlv4_prefill_out_path = qparam_path.replace("quant_param.npy", "prefill.bin")
-        qlv4_decode_out_path = qparam_path.replace("quant_param.npy", "decode.bin")
-        rblock_json_out_path = qparam_path.replace("quant_param.npy", "graph_patterns.json")
+        qlv4_prefill_out_path = qparam_path.replace("quant_param_golden.npy", "prefill.bin")
+        qlv4_decode_out_path = qparam_path.replace("quant_param_golden.npy", "decode.bin")
+        prefill_rblock_json_out_path = qparam_path.replace("quant_param_golden.npy", "prefill_graph_patterns.json")
+        decode_rblock_json_out_path = qparam_path.replace("quant_param_golden.npy", "decode_graph_patterns.json")
 
         torch.save(quant_models["prefill"].state_dict(), qlv4_prefill_out_path)
         torch.save(quant_models["decode"].state_dict(), qlv4_decode_out_path)
-        model_compressor.save_graph_patterns(model, rblock_json_out_path)      
+        model_compressor.save_graph_patterns(quant_models["prefill"], prefill_rblock_json_out_path)
+        model_compressor.save_graph_patterns(quant_models["decode"], decode_rblock_json_out_path)
 
 
     del model_for_calib
