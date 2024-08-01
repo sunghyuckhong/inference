@@ -347,6 +347,5 @@ def compare_model_outputs(args):
 
 if __name__ == "__main__":
     args = get_args()
-    args.n_layers = 4
     compare_model_outputs(args)
     print("llama-70b forward ci test is passed")
