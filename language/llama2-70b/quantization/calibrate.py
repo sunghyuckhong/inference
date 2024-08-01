@@ -221,7 +221,6 @@ def get_args():
 
 def main():
     args = get_args()
-
     golden_model = load_pytorch_model(
                             model_source = 'furiosa_llm_rope', 
                             model_path = args.model_path, 

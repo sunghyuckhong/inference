@@ -339,7 +339,7 @@ def compare_model_outputs(args):
     compare_output_yaml(golden_generation_result_file_path, submission_generation_result_file_path)
    
     if args.mcp_dumping_on:
-        compare_logits(args.logit_folder_path)
+        compare_logits(args.logit_folder_path, is_slice = True)
     
 
     
