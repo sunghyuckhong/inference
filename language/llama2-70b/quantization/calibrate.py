@@ -221,10 +221,6 @@ def get_args():
 
 def main():
     args = get_args()
-    
-    #test code
-    args.n_layers = 4
-    args.n_calib = 4
 
     golden_model = load_pytorch_model(
                             model_source = 'furiosa_llm_rope', 
