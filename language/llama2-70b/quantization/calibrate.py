@@ -24,6 +24,8 @@ def load_pytorch_model(model_source, model_path, use_gpu, n_layers):
         from furiosa_llm_models.llama.symbolic.huggingface_rope import LlamaForCausalLM
     elif model_source == 'mlperf_submission':
         from furiosa_llm_models.llama.symbolic.mlperf_submission import LlamaForCausalLM
+    elif model_source == 'mlperf_submission_slice':
+        from furiosa_llm_models.llama.symbolic.mlperf_submission_slice import LlamaForCausalLM
     else:
         raise ValueError
     
@@ -124,7 +126,6 @@ def calibrate(model, qconfig, qparam_path, qformat_path, calib_dataloader):
         autoscale_calib_kwargs=autoscale_calib_kwargs,
     )
 
-    
     model_compressor.save(
         model,
         qformat_out_path=qformat_path,
@@ -205,6 +206,12 @@ def get_args():
         default=1000,
         help="the number of calibration samples"
     )
+
+    parser.add_argument(
+        "--submission_model_source",
+        default = "mlperf_submission", 
+        help="quantization parameters for calibraed layers"
+    )
     
  
 
@@ -215,6 +222,10 @@ def get_args():
 def main():
     args = get_args()
     
+    #test code
+    args.n_layers = 4
+    args.n_calib = 4
+
     golden_model = load_pytorch_model(
                             model_source = 'furiosa_llm_rope', 
                             model_path = args.model_path, 
@@ -249,7 +260,7 @@ def main():
     torch.cuda.empty_cache() 
 
     submission_model = load_pytorch_model(
-                        model_source = 'mlperf_submission', 
+                        model_source = args.submission_model_source, 
                         model_path = args.model_path, 
                         use_gpu = args.gpu, 
                         n_layers = args.n_layers
