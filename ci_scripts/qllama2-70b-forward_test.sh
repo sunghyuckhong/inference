@@ -60,7 +60,7 @@ if [ "$CALIBRATE" = true ]; then
                                      --quant_format_path=$QUANT_FORMAT_PATH \
                                      --calib_data_path=$CALIB_DATA_PATH \
                                      --n_calib=$N_CALIB \
-                                    --submission_model_source=$SUBMISSION_MODEL_SOURCE \
+                                     --submission_model_source=$SUBMISSION_MODEL_SOURCE \
                                      --gpu
 
 fi

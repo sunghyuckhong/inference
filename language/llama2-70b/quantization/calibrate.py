@@ -118,12 +118,21 @@ def calibrate(model, qconfig, qparam_path, qformat_path, calib_dataloader):
         **get_kwargs(model_compressor.create_quantsim_model, qconfig),
     )
 
+    nodes_excluded_from_auto_scale_calib = [
+        'gate_proj',
+        'up_proj',
+        'o_proj',
+        'down_proj',
+        'lm_head',
+    ]
+
     model_compressor.calibrate(
         model,
         calib_dataloader=calib_dataloader,
         **get_kwargs(model_compressor.calibrate, qconfig),
         model_type = model_type,
         autoscale_calib_kwargs=autoscale_calib_kwargs,
+        nodes_excluded_from_auto_scale_calib=nodes_excluded_from_auto_scale_calib,
     )
 
     model_compressor.save(
@@ -221,6 +230,8 @@ def get_args():
 
 def main():
     args = get_args()
+    # print(args.quant_config_path)
+    # exit()
     golden_model = load_pytorch_model(
                             model_source = 'furiosa_llm_rope', 
                             model_path = args.model_path, 
